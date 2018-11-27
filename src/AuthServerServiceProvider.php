@@ -1,6 +1,6 @@
 <?php
 
-namespace Zeroone\AuthServer;
+namespace Zeroone\Authserver;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Foundation\AliasLoader;
