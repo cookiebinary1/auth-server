@@ -33,8 +33,8 @@ class AuthServerServiceProvider extends ServiceProvider
         // Load Views
         $this->loadViewsFrom(__DIR__ . '/../resources/views', 'AuthServer');
 
-        $this->app->singleton(AuthServer::class, function($app) {
-            return new AuthServer();:sadqwdq
+        $this->app->singleton(AuthServer::class, function ($app) {
+            return new AuthServer();
         });
     }
 
@@ -44,8 +44,7 @@ class AuthServerServiceProvider extends ServiceProvider
     public function register()
     {
         $this->mergeConfigFrom(
-            __DIR__.'/../config/authServer.php', 'authServer'
+            __DIR__ . '/../config/authServer.php', 'authServer'
         );
     }
-
 }
