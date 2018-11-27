@@ -1,9 +1,8 @@
 <?php
 
-dd(123);
 if (!function_exists("auth_server")) {
     /**
-     * @return AuthServer
+     * @return \Zeroone\Authserver\AuthServer
      * @author Cookie
      */
     function auth_server()
