@@ -1,6 +1,6 @@
 <?php
 
-namespace Zeroone\AuthServer\Http\Controllers;
+namespace Zeroone\Authserver\Http\Controllers;
 
 use App\AccessToken;
 use App\Http\Controllers\Controller;
@@ -31,12 +31,11 @@ class LoginController extends Controller
      * @param null $data
      * @author Cookie
      */
-    public function conclusion($data)
+    public function conclusion($data = null)
     {
-        $user = authServer()->userCreateOrUpdate($data);
+        $user = auth_server()->userCreateOrUpdate($data);
 
-
-        echo "user logged in";
+        return redirect(config("authServer.success_redirect_url"));
     }
 
     /**

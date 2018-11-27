@@ -7,11 +7,16 @@
         }
     ],
     "autoload": {
-        "psr-0": {
-            "Zeroone": "src/"
-        }
+        "psr-4": {
+            "Zeroone\\Authserver\\": "src/"
+        },
+        "files": [
+            "helpers/helpers.php"
+        ]
     },
     "require": {
-        "php": "^5.6.37 || ^7.0"
+        "php": "^5.6.37 || ^7.0",
+        "laravel/framework": "^5.4.*",
+        "doctrine/dbal": "^2.8",
     }
 }

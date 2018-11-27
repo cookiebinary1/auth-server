@@ -16,9 +16,7 @@ class AuthServerServiceProvider extends ServiceProvider
     protected $defer = false;
 
     /**
-     * Bootstrap the application events.
-     *
-     * @return  void
+     * @author Cookie
      */
     public function boot()
     {
@@ -36,8 +34,14 @@ class AuthServerServiceProvider extends ServiceProvider
         $this->loadViewsFrom(__DIR__ . '/../resources/views', 'AuthServer');
     }
 
+    /**
+     * @author Cookie
+     */
     public function register()
     {
+        $this->mergeConfigFrom(
+            __DIR__.'/../config/authServer.php', 'authServer'
+        );
     }
 
 }
