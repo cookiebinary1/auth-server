@@ -1,6 +1,5 @@
 <?php
 
-dd(123);
 if (!function_exists("auth_server")) {
     /**
      * @return AuthServer
