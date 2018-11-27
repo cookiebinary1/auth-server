@@ -34,7 +34,7 @@ class AuthServerServiceProvider extends ServiceProvider
         $this->loadViewsFrom(__DIR__ . '/../resources/views', 'AuthServer');
 
         $this->app->singleton(AuthServer::class, function($app) {
-            return new AuthServer();
+            return new AuthServer();:sadqwdq
         });
     }
 
