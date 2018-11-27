@@ -2,6 +2,8 @@
 
 ## Instalation
 
+It's easy as ususal..
+
 1. Require this package with composer using the following command:
    
    ```bash
