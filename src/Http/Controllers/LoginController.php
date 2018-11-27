@@ -20,7 +20,7 @@ class LoginController extends Controller
 
     /**
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
-     * @author Cookie
+     * @author Martin Osusky
      */
     public function getLogin()
     {
@@ -29,7 +29,7 @@ class LoginController extends Controller
 
     /**
      * @param null $data
-     * @author Cookie
+     * @author Martin Osusky
      */
     public function conclusion($data = null)
     {

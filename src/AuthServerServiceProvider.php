@@ -18,7 +18,7 @@ class AuthServerServiceProvider extends ServiceProvider
     protected $defer = false;
 
     /**
-     * @author Cookie
+     * @author Martin Osusky
      */
     public function boot()
     {
@@ -43,7 +43,7 @@ class AuthServerServiceProvider extends ServiceProvider
     }
 
     /**
-     * @author Cookie
+     * @author Martin Osusky
      */
     public function register()
     {

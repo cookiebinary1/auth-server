@@ -3,7 +3,7 @@
 if (!function_exists("auth_server")) {
     /**
      * @return \Zeroone\Authserver\AuthServer
-     * @author Cookie
+     * @author Martin Osusky
      */
     function auth_server()
     {

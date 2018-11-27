@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @author Cookie
+ * @author Martin Osusky
  */
 return [
     'url'                  => env('AUTH_SERVER_URL'),

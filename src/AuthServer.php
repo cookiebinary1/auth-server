@@ -24,7 +24,7 @@ class AuthServer
     /**
      * @param $encryptedData
      * @return object
-     * @author Cookie
+     * @author Martin Osusky
      */
     public function conclusion($encryptedData)
     {
@@ -50,7 +50,7 @@ class AuthServer
     /**
      * @param $encryptedData
      * @return User
-     * @author Cookie
+     * @author Martin Osusky
      */
     public function userCreateOrUpdate($encryptedData)
     {
@@ -76,7 +76,7 @@ class AuthServer
     /**
      * @param null $accessToken
      * @param null $refreshToken
-     * @author Cookie
+     * @author Martin Osusky
      */
     public function setToken($accessToken = null, $refreshToken = null)
     {
@@ -88,7 +88,7 @@ class AuthServer
 
     /**
      * @return \Illuminate\Session\SessionManager|\Illuminate\Session\Store|mixed
-     * @author Cookie
+     * @author Martin Osusky
      */
     public function accessToken()
     {
@@ -97,7 +97,7 @@ class AuthServer
 
     /**
      * @return mixed
-     * @author Cookie
+     * @author Martin Osusky
      */
     public function accessTokenJWT()
     {
@@ -106,7 +106,7 @@ class AuthServer
 
     /**
      * @return \Illuminate\Session\SessionManager|\Illuminate\Session\Store|mixed
-     * @author Cookie
+     * @author Martin Osusky
      */
     public function refreshToken()
     {
@@ -115,7 +115,7 @@ class AuthServer
 
     /**
      * @return \Illuminate\Session\SessionManager|\Illuminate\Session\Store|mixed
-     * @author Cookie
+     * @author Martin Osusky
      */
     public function uid()
     {
@@ -124,7 +124,7 @@ class AuthServer
 
     /**
      * @return \Illuminate\Config\Repository|mixed
-     * @author Cookie
+     * @author Martin Osusky
      */
     public function secretKey()
     {
@@ -133,7 +133,7 @@ class AuthServer
 
     /**
      * @return bool|string
-     * @author Cookie
+     * @author Martin Osusky
      */
     public function publicKey()
     {
@@ -143,7 +143,7 @@ class AuthServer
 
     /**
      * @return mixed
-     * @author Cookie
+     * @author Martin Osusky
      */
     public function getProfile()
     {
@@ -181,7 +181,7 @@ class AuthServer
      * @param        $password
      * @param string $salt
      * @return string
-     * @author Cookie
+     * @author Martin Osusky
      */
     public function decrypt($ciphertext, $password, $salt='')
     {
@@ -202,7 +202,7 @@ class AuthServer
      * @param int    $iterations
      * @param string $hashAlgorithm
      * @return array
-     * @author Cookie
+     * @author Martin Osusky
      */
     public function evpKDF($password, $salt, $keySize = 8, $ivSize = 4, $iterations = 1, $hashAlgorithm = "md5")
     {

@@ -4,7 +4,7 @@ namespace Zeroone\Authserver\Http;
 
 /**
  * Trait AuthUserTrait
- * @author Cookie
+ * @author Martin Osusky
  */
 trait AuthUserTrait
 {
@@ -12,7 +12,7 @@ trait AuthUserTrait
 
     /**
      * @return self
-     * @author Cookie
+     * @author Martin Osusky
      */
     public static function createFromProfile()
     {
@@ -29,7 +29,7 @@ trait AuthUserTrait
     }
 
     /**
-     * @author Cookie
+     * @author Martin Osusky
      */
     public function updateProfile()
     {
@@ -38,7 +38,7 @@ trait AuthUserTrait
 
     /**
      * @return mixed
-     * @author Cookie
+     * @author Martin Osusky
      */
     protected function accessToken()
     {

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @author Cookie
+ * @author Martin Osusky
  */
 Route::group(['middleware' => ['web']], function () {
     Route::get("login", "\Zeroone\Authserver\Http\Controllers\LoginController@getLogin")->name("login");

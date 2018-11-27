@@ -6,7 +6,7 @@ use Illuminate\Database\Migrations\Migration;
 
 /**
  * Class UserNull
- * @author Cookie
+ * @author Martin Osusky
  */
 class UserUpdate extends Migration
 {
@@ -34,7 +34,7 @@ class UserUpdate extends Migration
     ];
 
     /**
-     * @author Cookie
+     * @author Martin Osusky
      */
     public function up()
     {
@@ -56,7 +56,7 @@ class UserUpdate extends Migration
     }
 
     /**
-     * @author Cookie
+     * @author Martin Osusky
      */
     public function down()
     {
