@@ -1,4 +1,4 @@
-# AuthServer SDK (Laravel 5 implementation)
+# AuthServer SDK (Laravel 5+ implementation)
 
 ## Instalation
 
@@ -58,7 +58,7 @@ Route::get("register", "\Zeroone\AuthServer\Http\Controllers\RegisterController@
 If you need you can use helper function to get an `AuthServer` instance
 
 ```php
-$authServer = auth_server()
+$authServer = auth_server();
 ```
 
 There are some useful methods, try & enjoy ..
