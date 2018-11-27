@@ -27,6 +27,8 @@ class AuthServerServiceProvider extends ServiceProvider
 
         AliasLoader::getInstance()->alias('AuthServerAppController', $nameSpace . 'Http\Controllers\Controller');
 
+        $this->loadMigrationsFrom(__DIR__.'/../migrations/2018_11_27_113423_user_update.php');
+
         // Routes
         $this->app->router->group(['namespace' => $nameSpace . 'Http\Controllers'], function () {
             require __DIR__ . '/../routes/web.php';
