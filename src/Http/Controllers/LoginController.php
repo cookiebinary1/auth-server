@@ -35,6 +35,8 @@ class LoginController extends Controller
     {
         $user = auth_server()->userCreateOrUpdate($data);
 
+        auth()->login($user);
+
         return redirect(config("authServer.success_redirect_url"));
     }
 

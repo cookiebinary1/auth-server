@@ -13,11 +13,9 @@ use Illuminate\Foundation\AliasLoader;
 class AuthServerServiceProvider extends ServiceProvider
 {
     /**
-     * Indicates if loading of the provider is deferred.
-     *
-     * @var  bool
+     * @var bool
      */
-    //protected $defer = false;
+    protected $defer = false;
 
     /**
      * @author Cookie
