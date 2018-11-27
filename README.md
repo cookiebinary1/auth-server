@@ -2,7 +2,7 @@
 
 ## Instalation
 
-It's easy as ususal..
+It's easy as usual..
 
 1. Require this package with composer using the following command:
    
