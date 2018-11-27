@@ -1,6 +1,6 @@
-## AuthServer SDK (Laravel 5 implementation)
+# AuthServer SDK (Laravel 5 implementation)
 
-### Instalation
+## Instalation
 
 1. Require this package with composer using the following command:
    
@@ -40,7 +40,7 @@
    It upgrades your `users` table; some needed fields will be added.
    
    
-   ### Usage
+## Usage
    
 New routes will be created automaticaly:
 

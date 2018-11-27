@@ -1,9 +1,12 @@
 {
     "name": "zeroone/auth-server",
     "description": "AuthServer implementation for Laravel.",
-    "keywords": ["laravel", "auth-server", "sdk"],
+    "keywords": [ "auth-server", "laravel", "sdk", "api"],
     "license": "MIT",
     "authors": [
+        {
+            "name": "01people"
+        },
         {
             "name": "Martin Osusky",
             "email": "cookie.binary@gmail.com"
