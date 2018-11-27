@@ -1,7 +1,7 @@
 {
     "name": "zeroone/auth-server",
-    "description": "AuthServer implementation for Laravel.",
-    "keywords": [ "auth-server", "laravel", "sdk", "api"],
+    "description": "AuthServer implementation for Laravel 5+",
+    "keywords": [ "auth-server", "laravel", "sdk", "api", "01people"],
     "license": "MIT",
     "authors": [
         {
