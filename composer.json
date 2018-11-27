@@ -6,7 +6,6 @@
             "email": "cookie.binary@gmail.com"
         }
     ],
-    "require": {},
     "autoload": {
         "psr-0": {
             "Zeroone": "src/"
