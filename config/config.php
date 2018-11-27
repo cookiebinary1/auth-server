@@ -17,21 +17,21 @@ return [
 
 		'package' => 'AuthServer',
 
-		'model' => base_path() . '/01people/AuthServer/src',
+		'model' => base_path() . '/zeroone/AuthServer/src',
 
-        'views' => base_path() . '/01people/AuthServer/resources/views',
+        'views' => base_path() . '/zeroone/AuthServer/resources/views',
 
-        'controller' => base_path() . '/01people/AuthServer/src/Http/Controllers',
+        'controller' => base_path() . '/zeroone/AuthServer/src/Http/Controllers',
 
-        'migration' => base_path() . '/01people/AuthServer/database/migrations',
+        'migration' => base_path() . '/zeroone/AuthServer/database/migrations',
 
 		'database' => '/01people/AuthServer/database/migrations',
 
-	   	'routes' => base_path() . '/01people/AuthServer/routes/web.php',
+	   	'routes' => base_path() . '/zeroone/AuthServer/routes/web.php',
 
-	   	'controllerNameSpace' => '01people\AuthServer\\Http\\Controllers',
+	   	'controllerNameSpace' => 'zeroone\AuthServer\\Http\\Controllers',
 
-	   	'modelNameSpace' => '01people\AuthServer',
+	   	'modelNameSpace' => 'zeroone\AuthServer',
 
 		'loadViews' => 'AuthServer',
 
