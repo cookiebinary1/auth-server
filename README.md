@@ -20,3 +20,9 @@ use \Zeroone\Authserver\Http\AuthUserTrait;
 
 Add         \Zeroone\AuthServer\AuthServerServiceProvider::class
 to config/app.php section providers
+
+
+created routes:
+
+/login
+/register

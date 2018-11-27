@@ -37,6 +37,8 @@ class LoginController extends Controller
 
         auth()->login($user);
 
+        session()->save();
+
         return redirect(config("authServer.success_redirect_url"));
     }
 
