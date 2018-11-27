@@ -16,3 +16,7 @@ AUTH_SERVER_SUCCESS_URL=/success # url, could be absolute
 Add trait usage to User eloquent:
 
 use \Zeroone\Authserver\Http\AuthUserTrait;
+
+
+Add         \Zeroone\AuthServer\AuthServerServiceProvider::class
+to config/app.php section providers
