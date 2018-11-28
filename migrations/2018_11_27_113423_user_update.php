@@ -31,6 +31,7 @@ class UserUpdate extends Migration
         'language',
         'lid',
         'user_id',
+        'name',
     ];
 
     /**
