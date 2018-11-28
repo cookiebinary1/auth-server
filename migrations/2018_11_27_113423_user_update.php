@@ -50,7 +50,7 @@ class UserUpdate extends Migration
         Schema::table("users", function (Blueprint $table) {
             foreach (self::COLUMNS as $column) {
                 if (Schema::hasColumn("users", $column)) {
-                    $table->string('uid')->nullable()->change();
+                    $table->string($column)->nullable()->change();
                 }
             }
         });
