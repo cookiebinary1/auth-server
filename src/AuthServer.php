@@ -2,9 +2,9 @@
 
 namespace Zeroone\Authserver;
 
-use App\AccessToken;
 use App\User;
 use Firebase\JWT\JWT;
+use Zeroone\Authserver\Http\AccessToken;
 
 /**
  * Class AuthServer
