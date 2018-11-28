@@ -53,19 +53,17 @@ class AuthServer
 
         $this->setToken($data->accessToken, $data->refreshToken);
 
-        $key = file_get_contents(config("authServer.cert_file"));
-
-        $decoded = JWT::decode($data->accessToken, $key, ['RS256']);
+        $jwt = $this->accessTokenJWT();
 
         // save token
         AccessToken::create([
-            'data'          => json_encode($decoded),
-            'uid'           => $decoded->uid,
+            'data'          => json_encode($jwt),
+            'uid'           => $jwt->uid,
             'refresh_token' => $data->refreshToken,
-            'exp'           => $decoded->exp,
+            'exp'           => $jwt->exp,
         ]);
 
-        return $decoded;
+        return $jwt;
     }
 
     /**
@@ -180,11 +178,15 @@ class AuthServer
      */
     public function accessTokenJWT()
     {
-        return JWT::decode(
-            session(self::SESSION_PREFIX . ":" . self::ACCESS_TOKEN),
-            $this->publicKey(),
-            ['RS256']
-        );
+        try {
+            return JWT::decode(
+                session(self::SESSION_PREFIX . ":" . self::ACCESS_TOKEN),
+                $this->publicKey(),
+                ['RS256']
+            );
+        } catch (\UnexpectedValueException $exception) {
+            return null;
+        }
     }
 
     /**
@@ -327,11 +329,14 @@ class AuthServer
             CURLOPT_URL            => $url,
             CURLOPT_POST           => (int)($dataJson or $method),
             CURLOPT_HTTPHEADER     => $headers,
-            CURLOPT_CUSTOMREQUEST  => $method,
         ];
 
         if ($dataJson) {
             $options[CURLOPT_POSTFIELDS] = $dataJson;
+        }
+
+        if ($method) {
+            $options[CURLOPT_CUSTOMREQUEST] = $method;
         }
 
         curl_setopt_array($curl, $options);

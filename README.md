@@ -39,7 +39,7 @@ It's easy as usual..
 
    ```
     
-   It upgrades your `users` table; some needed fields will be added.
+   Table `access_tokens` will be created and table `users` will be upgraded; some needed fields will be added.
    
    
 ## Usage
