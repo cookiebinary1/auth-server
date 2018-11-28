@@ -3,6 +3,7 @@
 namespace Zeroone\Authserver;
 
 use App\User;
+use Firebase\JWT\ExpiredException;
 use Firebase\JWT\JWT;
 use Zeroone\Authserver\Http\AccessToken;
 
@@ -35,9 +36,11 @@ class AuthServer
         "email",
     ];
 
+    const API_VERSION_URL = "/api/v1/";
+
     protected
-        $profileUrl = "/api/v1/area/user",
-        $refreshTokenUrl = "/api/v1/area/refresh-token";
+        $profileUrl = "area/user",
+        $refreshTokenUrl = "refresh-token";
 
     /**
      * @param $encryptedData
@@ -103,39 +106,15 @@ class AuthServer
      */
     public function userUpdate(User $user)
     {
-        $url = config("authServer.url") . $this->profileUrl;
-
-        $accessToken = $this->accessToken();
-
-        $curl = curl_init();
-
         $dataJson = json_encode($user->only(self::UPDATE_COLUMNS));
 
         $headers = [
-            'api_key:' . config("authServer.api_key"),
-            "Authorization: Bearer $accessToken",
+            "Authorization: Bearer " . $this->accessToken(),
             'Content-Type: application/json',
             'Content-Length: ' . strlen($dataJson),
         ];
 
-        curl_setopt_array($curl, [
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_URL            => $url,
-                CURLOPT_POST           => 0,
-                CURLOPT_HTTPHEADER     => $headers,
-                CURLOPT_CUSTOMREQUEST  => "PUT",
-                CURLOPT_POSTFIELDS     => $dataJson,
-            ]
-        );
-
-        $response = curl_exec($curl);
-
-        curl_close($curl);
-
-        // @todo response validity check
-        $response = json_decode($response, true);
-
-        return $response;
+        return $this->request($this->profileUrl, $headers, $dataJson, "PUT");
     }
 
     /**
@@ -144,12 +123,6 @@ class AuthServer
      */
     public function refreshAccessToken()
     {
-        $url = config("authServer.url") . $this->refreshTokenUrl;
-
-        $accessToken = $this->accessToken(true);
-
-        $curl = curl_init();
-
         $dataJson = json_encode([
             "refresh_token" => $this->refreshToken(),
         ]);
@@ -157,31 +130,15 @@ class AuthServer
         $headers = [
             'api_key:' . config("authServer.api_key"),
             'api_secret:' . config("authServer.api_secret"),
-            "Authorization: Bearer $accessToken",
+            "Authorization: Bearer " . $this->accessToken(true),
             'Content-Type: application/json',
             'Content-Length: ' . strlen($dataJson),
         ];
 
-        curl_setopt_array($curl, [
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_URL            => $url,
-                CURLOPT_POST           => true,
-                CURLOPT_HTTPHEADER     => $headers,
-                CURLOPT_POSTFIELDS     => $dataJson,
-            ]
-        );
-
-        $response = curl_exec($curl);
-
-        curl_close($curl);
-
-        // @todo response validity check
-        $response = json_decode($response, true);
+        $response = $this->request($this->refreshTokenUrl, $headers, $dataJson);
 
         // @todo check response validity
         $this->setToken(@$response['accessToken'], @$response['refresh_token']);
-
-        //dd($response);
 
         return $response;
     }
@@ -200,13 +157,18 @@ class AuthServer
     }
 
     /**
+     * @param bool $forceWithoutRefresh
      * @return \Illuminate\Session\SessionManager|\Illuminate\Session\Store|mixed
      * @author Martin Osusky
      */
     public function accessToken($forceWithoutRefresh = false)
     {
-        if (!$forceWithoutRefresh and $this->accessTokenJWT()->exp < time()) {
-            $this->refreshAccessToken();
+        if (!$forceWithoutRefresh) {
+            try {
+                $this->accessTokenJWT();
+            } catch (ExpiredException $exception) {
+                $this->refreshAccessToken();
+            }
         }
 
         return session(self::SESSION_PREFIX . ":" . self::ACCESS_TOKEN);
@@ -268,33 +230,10 @@ class AuthServer
      */
     public function getProfile()
     {
-        $url = config("authServer.url") . $this->profileUrl;
-
-        $accessToken = $this->accessToken();
-
-        $curl = curl_init();
-
-        $headers = [
-            'api_key:' . config("authServer.api_key"),
-            "Authorization: Bearer $accessToken",
-        ];
-
-        curl_setopt_array($curl, [
-                CURLOPT_RETURNTRANSFER => 1,
-                CURLOPT_URL            => $url,
-                CURLOPT_POST           => 0,
-                CURLOPT_HTTPHEADER     => $headers,
-            ]
+        return $this->request(
+            $this->profileUrl,
+            ["Authorization: Bearer " . $this->accessToken()]
         );
-
-        $response = curl_exec($curl);
-
-        curl_close($curl);
-
-        // @todo validity check
-        $response = json_decode($response, true);
-
-        return $response;
     }
 
     /**
@@ -361,6 +300,51 @@ class AuthServer
             "key" => substr($derivedBytes, 0, $keySize * 4),
             "iv"  => substr($derivedBytes, $keySize * 4, $ivSize * 4)
         );
+    }
+
+    /**
+     * @param       $action
+     * @param array $headers
+     * @param null  $dataJson
+     * @param null  $method
+     * @return mixed
+     * @author Cookie
+     */
+    public function request($action, array $headers, $dataJson = null, $method = null)
+    {
+        $url = config("authServer.url") . self::API_VERSION_URL . $action;
+
+        if (!is_string($dataJson) and $dataJson) {
+            $dataJson = json_encode($dataJson);
+        }
+
+        $curl = curl_init();
+
+        $headers[] = 'api_key:' . config("authServer.api_key");
+
+        $options = [
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_URL            => $url,
+            CURLOPT_POST           => (int)($dataJson or $method),
+            CURLOPT_HTTPHEADER     => $headers,
+            CURLOPT_CUSTOMREQUEST  => $method,
+        ];
+
+        if ($dataJson) {
+            $options[CURLOPT_POSTFIELDS] = $dataJson;
+        }
+
+//dd($options);
+        curl_setopt_array($curl, $options);
+
+        $response = curl_exec($curl);
+
+        curl_close($curl);
+
+        // @todo response validity check
+        $response = json_decode($response, true) ?? $response;
+
+        return $response;
     }
 }
 
