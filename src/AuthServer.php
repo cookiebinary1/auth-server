@@ -36,7 +36,8 @@ class AuthServer
     ];
 
     protected
-        $profileUrl = "/api/v1/area/user";
+        $profileUrl = "/api/v1/area/user",
+        $refreshTokenUrl = "/api/v1/area/refresh-token";
 
     /**
      * @param $encryptedData
@@ -138,6 +139,54 @@ class AuthServer
     }
 
     /**
+     * @param User $user
+     * @author Martin Osusky
+     */
+    public function refreshAccessToken()
+    {
+        $url = config("authServer.url") . $this->refreshTokenUrl;
+
+        $accessToken = $this->accessToken(true);
+
+        $curl = curl_init();
+
+        $dataJson = json_encode([
+            "refresh_token" => $this->refreshToken(),
+        ]);
+
+        $headers = [
+            'api_key:' . config("authServer.api_key"),
+            'api_secret:' . config("authServer.api_secret"),
+            "Authorization: Bearer $accessToken",
+            'Content-Type: application/json',
+            'Content-Length: ' . strlen($dataJson),
+        ];
+
+        curl_setopt_array($curl, [
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_URL            => $url,
+                CURLOPT_POST           => true,
+                CURLOPT_HTTPHEADER     => $headers,
+                CURLOPT_POSTFIELDS     => $dataJson,
+            ]
+        );
+
+        $response = curl_exec($curl);
+
+        curl_close($curl);
+
+        // @todo response validity check
+        $response = json_decode($response, true);
+
+        // @todo check response validity
+        $this->setToken(@$response['accessToken'], @$response['refresh_token']);
+
+        //dd($response);
+
+        return $response;
+    }
+
+    /**
      * @param null $accessToken
      * @param null $refreshToken
      * @author Martin Osusky
@@ -154,11 +203,12 @@ class AuthServer
      * @return \Illuminate\Session\SessionManager|\Illuminate\Session\Store|mixed
      * @author Martin Osusky
      */
-    public function accessToken()
+    public function accessToken($forceWithoutRefresh = false)
     {
-//        $dt = new \DateTime("now", new \DateTimeZone('Europe/Bratislava'));
-//        dd($dt->format('U'));
-//        dd ($this->accessTokenJWT(), time(), date("H:i:s"));
+        if (!$forceWithoutRefresh and $this->accessTokenJWT()->exp < time()) {
+            $this->refreshAccessToken();
+        }
+
         return session(self::SESSION_PREFIX . ":" . self::ACCESS_TOKEN);
     }
 
