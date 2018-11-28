@@ -38,6 +38,16 @@ class AuthServerServiceProvider extends ServiceProvider
         $this->app->singleton(AuthServer::class, function ($app) {
             return new AuthServer();
         });
+
+        User::updated(function ($user) {
+            /** @var User $user */
+            $user->updateProfile();
+        });
+
+        User::saved(function ($user) {
+            /** @var User $user */
+            $user->updateProfile();
+        });
     }
 
     /**

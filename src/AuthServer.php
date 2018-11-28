@@ -32,6 +32,7 @@ class AuthServer
         "username",
         "date_of_birth",
         "phone_number",
+        "email",
     ];
 
     protected
@@ -72,17 +73,23 @@ class AuthServer
     {
         $data = $this->conclusion($encryptedData);
 
+        //dd($this->getProfile());
+
         // check if user exists
         if ($user = User::whereUid($data->uid)->first()) {
             // user exists
             // check profile checksum
+
             if ($user->csm != $data->csm) {
-                // todo update user profile
+                // update user profile
+                if (is_array($profile = $this->getProfile())) {
+                    $user->update($profile);
+                }
             }
+
         } else {
             // user first time login
             // create user
-
             $user = User::createFromProfile();
         }
 
@@ -101,12 +108,14 @@ class AuthServer
 
         $curl = curl_init();
 
+        $dataJson = json_encode($user->only(self::UPDATE_COLUMNS));
+
         $headers = [
             'api_key:' . config("authServer.api_key"),
             "Authorization: Bearer $accessToken",
+            'Content-Type: application/json',
+            'Content-Length: ' . strlen($dataJson),
         ];
-
-        $dataJson = jsone_encode($user->only(self::UPDATE_COLUMNS));
 
         curl_setopt_array($curl, [
                 CURLOPT_RETURNTRANSFER => true,
@@ -115,10 +124,6 @@ class AuthServer
                 CURLOPT_HTTPHEADER     => $headers,
                 CURLOPT_CUSTOMREQUEST  => "PUT",
                 CURLOPT_POSTFIELDS     => $dataJson,
-                CURLOPT_HTTPHEADER     => [
-                    'Content-Type: application/json',
-                    'Content-Length: ' . strlen($dataJson)
-                ],
             ]
         );
 
@@ -151,6 +156,9 @@ class AuthServer
      */
     public function accessToken()
     {
+//        $dt = new \DateTime("now", new \DateTimeZone('Europe/Bratislava'));
+//        dd($dt->format('U'));
+//        dd ($this->accessTokenJWT(), time(), date("H:i:s"));
         return session(self::SESSION_PREFIX . ":" . self::ACCESS_TOKEN);
     }
 
@@ -160,7 +168,11 @@ class AuthServer
      */
     public function accessTokenJWT()
     {
-        return JWT::decode($this->accessToken(), $this->publicKey(), ['RS256']);
+        return JWT::decode(
+            session(self::SESSION_PREFIX . ":" . self::ACCESS_TOKEN),
+            $this->publicKey(),
+            ['RS256']
+        );
     }
 
     /**
