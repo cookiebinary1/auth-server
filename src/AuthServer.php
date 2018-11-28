@@ -308,7 +308,7 @@ class AuthServer
      * @param null  $dataJson
      * @param null  $method
      * @return mixed
-     * @author Cookie
+     * @author Martin Osusky
      */
     public function request($action, array $headers, $dataJson = null, $method = null)
     {
@@ -334,7 +334,6 @@ class AuthServer
             $options[CURLOPT_POSTFIELDS] = $dataJson;
         }
 
-//dd($options);
         curl_setopt_array($curl, $options);
 
         $response = curl_exec($curl);
