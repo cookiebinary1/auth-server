@@ -32,6 +32,8 @@ class UserUpdate extends Migration
         'lid',
         'user_id',
         'name',
+        "email_verification",
+        "country",
     ];
 
     /**

@@ -12,12 +12,10 @@ use Illuminate\Foundation\Auth\AuthenticatesUsers;
 /**
  * Class LoginController
  * @package App\Http\Controllers\Auth
- * @author  Cookie
+ * @author  Martin Osusky
  */
 class LoginController extends Controller
 {
-    //use AuthenticatesUsers;
-
     /**
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      * @author Martin Osusky
@@ -47,6 +45,6 @@ class LoginController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('guest')->except('logout');
+        //$this->middleware('guest')->except('logout');
     }
 }

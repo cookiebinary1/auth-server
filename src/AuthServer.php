@@ -9,7 +9,7 @@ use Zeroone\Authserver\Http\AccessToken;
 /**
  * Class AuthServer
  * @package App\Src
- * @author  Cookie
+ * @author  Martin Osusky
  */
 class AuthServer
 {
@@ -19,7 +19,23 @@ class AuthServer
         REFRESH_TOKEN = "refreshToken",
         UID = "uid";
 
-    protected $profileUrl = "/api/v1/area/user";
+    const UPDATE_COLUMNS = [
+        "title",
+        "first_name",
+        "last_name",
+        "middle_name",
+        "state",
+        "country",
+        "city",
+        "address",
+        "post_code",
+        "username",
+        "date_of_birth",
+        "phone_number",
+    ];
+
+    protected
+        $profileUrl = "/api/v1/area/user";
 
     /**
      * @param $encryptedData
@@ -71,6 +87,49 @@ class AuthServer
         }
 
         return $user;
+    }
+
+    /**
+     * @param User $user
+     * @author Martin Osusky
+     */
+    public function userUpdate(User $user)
+    {
+        $url = config("authServer.url") . $this->profileUrl;
+
+        $accessToken = $this->accessToken();
+
+        $curl = curl_init();
+
+        $headers = [
+            'api_key:' . config("authServer.api_key"),
+            "Authorization: Bearer $accessToken",
+        ];
+
+        $dataJson = jsone_encode($user->only(self::UPDATE_COLUMNS));
+
+        curl_setopt_array($curl, [
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_URL            => $url,
+                CURLOPT_POST           => 0,
+                CURLOPT_HTTPHEADER     => $headers,
+                CURLOPT_CUSTOMREQUEST  => "PUT",
+                CURLOPT_POSTFIELDS     => $dataJson,
+                CURLOPT_HTTPHEADER     => [
+                    'Content-Type: application/json',
+                    'Content-Length: ' . strlen($dataJson)
+                ],
+            ]
+        );
+
+        $response = curl_exec($curl);
+
+        curl_close($curl);
+
+        // @todo response validity check
+        $response = json_decode($response, true);
+
+        return $response;
     }
 
     /**
@@ -183,11 +242,11 @@ class AuthServer
      * @return string
      * @author Martin Osusky
      */
-    public function decrypt($ciphertext, $password, $salt='')
+    public function decrypt($ciphertext, $password, $salt = '')
     {
         $ciphertext = base64_decode($ciphertext, true);
         $ciphertext = hex2bin($ciphertext);
-        $keyAndIV   = $this->evpKDF($password, $salt);
+        $keyAndIV = $this->evpKDF($password, $salt);
 
         $plaintext = openssl_decrypt($ciphertext, 'aes-256-ctr', $keyAndIV["key"], OPENSSL_RAW_DATA, $keyAndIV["iv"]);
 
@@ -207,36 +266,33 @@ class AuthServer
     public function evpKDF($password, $salt, $keySize = 8, $ivSize = 4, $iterations = 1, $hashAlgorithm = "md5")
     {
         $targetKeySize = $keySize + $ivSize;
-        $derivedBytes  = "";
+        $derivedBytes = "";
 
         $numberOfDerivedWords = 0;
-        $block         = NULL;
-        $hasher        = hash_init($hashAlgorithm);
+        $block = NULL;
+        $hasher = hash_init($hashAlgorithm);
 
-        while ($numberOfDerivedWords < $targetKeySize)
-        {
-            if ($block != NULL)
-            {
+        while ($numberOfDerivedWords < $targetKeySize) {
+            if ($block != NULL) {
                 hash_update($hasher, $block);
             }
 
             hash_update($hasher, $password);
             hash_update($hasher, $salt);
 
-            $block   = hash_final($hasher, TRUE);
-            $hasher  = hash_init($hashAlgorithm);
+            $block = hash_final($hasher, TRUE);
+            $hasher = hash_init($hashAlgorithm);
 
             // Iterations
-            for ($i = 1; $i < $iterations; $i++)
-            {
+            for ($i = 1; $i < $iterations; $i++) {
                 hash_update($hasher, $block);
-                $block   = hash_final($hasher, TRUE);
-                $hasher  = hash_init($hashAlgorithm);
+                $block = hash_final($hasher, TRUE);
+                $hasher = hash_init($hashAlgorithm);
             }
 
             $derivedBytes .= substr($block, 0, min(strlen($block), ($targetKeySize - $numberOfDerivedWords) * 4));
 
-            $numberOfDerivedWords += strlen($block)/4;
+            $numberOfDerivedWords += strlen($block) / 4;
         }
 
         return array(

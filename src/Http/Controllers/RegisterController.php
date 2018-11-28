@@ -11,7 +11,7 @@ use Illuminate\Foundation\Auth\RegistersUsers;
 /**
  * Class RegisterController
  * @package App\Http\Controllers\Auth
- * @author  Cookie
+ * @author  Martin Osusky
  */
 class RegisterController extends Controller
 {

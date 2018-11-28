@@ -6,12 +6,12 @@ use Illuminate\Database\Migrations\Migration;
 
 /**
  * Class AccessToken
- * @author Cookie
+ * @author Martin Osusky
  */
 class AccessToken extends Migration
 {
     /**
-     * @author Cookie
+     * @author Martin Osusky
      */
     public function up()
     {
@@ -26,7 +26,7 @@ class AccessToken extends Migration
     }
 
     /**
-     * @author Cookie
+     * @author Martin Osusky
      */
     public function down()
     {

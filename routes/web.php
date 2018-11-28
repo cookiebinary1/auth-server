@@ -8,3 +8,4 @@ Route::group(['middleware' => ['web']], function () {
     Route::post("login/conclusion/{data?}", "\Zeroone\Authserver\Http\Controllers\LoginController@conclusion")->name("login.conclusion");
     Route::get("register", "\Zeroone\Authserver\Http\Controllers\RegisterController@getRegister")->name("register");
 });
+

@@ -4,11 +4,12 @@ namespace Zeroone\Authserver;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Foundation\AliasLoader;
+use App\User;
 
 /**
  * Class AuthServerServiceProvider
  * @package Zeroone\AuthServer
- * @author  Cookie
+ * @author  Martin Osusky
  */
 class AuthServerServiceProvider extends ServiceProvider
 {
@@ -22,19 +23,16 @@ class AuthServerServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        // Get namespace
         $nameSpace = $this->app->getNamespace();
 
         AliasLoader::getInstance()->alias('AuthServerAppController', $nameSpace . 'Http\Controllers\Controller');
 
-        $this->loadMigrationsFrom(__DIR__.'/../migrations');
+        $this->loadMigrationsFrom(__DIR__ . '/../migrations');
 
-        // Routes
         $this->app->router->group(['namespace' => $nameSpace . 'Http\Controllers'], function () {
             require __DIR__ . '/../routes/web.php';
         });
 
-        // Load Views
         $this->loadViewsFrom(__DIR__ . '/../resources/views', 'AuthServer');
 
         $this->app->singleton(AuthServer::class, function ($app) {
