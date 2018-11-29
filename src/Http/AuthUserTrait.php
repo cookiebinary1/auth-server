@@ -60,7 +60,7 @@ trait AuthUserTrait
 
     /**
      * @return $this
-     * @author Martin Osusky
+     * @author Cookie
      */
     public function makeFillables()
     {

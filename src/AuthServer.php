@@ -53,17 +53,19 @@ class AuthServer
 
         $this->setToken($data->accessToken, $data->refreshToken);
 
-        $jwt = $this->accessTokenJWT();
+        $key = file_get_contents(config("authServer.cert_file"));
+
+        $decoded = JWT::decode($data->accessToken, $key, ['RS256']);
 
         // save token
         AccessToken::create([
-            'data'          => json_encode($jwt),
-            'uid'           => $jwt->uid,
+            'data'          => json_encode($decoded),
+            'uid'           => $decoded->uid,
             'refresh_token' => $data->refreshToken,
-            'exp'           => $jwt->exp,
+            'exp'           => $decoded->exp,
         ]);
 
-        return $jwt;
+        return $decoded;
     }
 
     /**
@@ -127,7 +129,7 @@ class AuthServer
 
         $headers = [
             'api_key:' . config("authServer.api_key"),
-            'api_secret:' . config("authServer.api_secret"),
+            'api_secret:' . config("authServer.secret_key"),
             "Authorization: Bearer " . $this->accessToken(true),
             'Content-Type: application/json',
             'Content-Length: ' . strlen($dataJson),
@@ -151,7 +153,7 @@ class AuthServer
         session([
             self::SESSION_PREFIX . ":" . self::ACCESS_TOKEN  => $accessToken,
             self::SESSION_PREFIX . ":" . self::REFRESH_TOKEN => $refreshToken,
-        ]);
+        ])->save();
     }
 
     /**
@@ -178,15 +180,11 @@ class AuthServer
      */
     public function accessTokenJWT()
     {
-        try {
-            return JWT::decode(
-                session(self::SESSION_PREFIX . ":" . self::ACCESS_TOKEN),
-                $this->publicKey(),
-                ['RS256']
-            );
-        } catch (\UnexpectedValueException $exception) {
-            return null;
-        }
+        return JWT::decode(
+            session(self::SESSION_PREFIX . ":" . self::ACCESS_TOKEN),
+            $this->publicKey(),
+            ['RS256']
+        );
     }
 
     /**
@@ -310,7 +308,7 @@ class AuthServer
      * @param null  $dataJson
      * @param null  $method
      * @return mixed
-     * @author Martin Osusky
+     * @author Cookie
      */
     public function request($action, array $headers, $dataJson = null, $method = null)
     {
@@ -329,16 +327,14 @@ class AuthServer
             CURLOPT_URL            => $url,
             CURLOPT_POST           => (int)($dataJson or $method),
             CURLOPT_HTTPHEADER     => $headers,
+            CURLOPT_CUSTOMREQUEST  => $method,
         ];
 
         if ($dataJson) {
             $options[CURLOPT_POSTFIELDS] = $dataJson;
         }
 
-        if ($method) {
-            $options[CURLOPT_CUSTOMREQUEST] = $method;
-        }
-
+//dd($options);
         curl_setopt_array($curl, $options);
 
         $response = curl_exec($curl);
