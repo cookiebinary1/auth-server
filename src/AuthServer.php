@@ -153,7 +153,9 @@ class AuthServer
         session([
             self::SESSION_PREFIX . ":" . self::ACCESS_TOKEN  => $accessToken,
             self::SESSION_PREFIX . ":" . self::REFRESH_TOKEN => $refreshToken,
-        ])->save();
+        ]);
+        
+        session()->save();
     }
 
     /**
