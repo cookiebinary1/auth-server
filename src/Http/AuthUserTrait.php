@@ -60,7 +60,7 @@ trait AuthUserTrait
 
     /**
      * @return $this
-     * @author Martin Osusky
+     * @author Cookie
      */
     public function makeFillables()
     {
@@ -94,5 +94,16 @@ trait AuthUserTrait
         ]);
 
         return $this;
+    }
+
+    /**
+     * @return mixed
+     * @author Cookie
+     */
+    public function logout()
+    {
+        auth_server()->logout();
+
+        return parent::logout();
     }
 }
