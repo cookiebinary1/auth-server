@@ -46,7 +46,7 @@ trait AuthUserTrait
      */
     public function updateProfile()
     {
-        return auth_server()->userUpdate($this);
+        return auth_server()->check() and auth_server()->userUpdate($this);
     }
 
     /**
@@ -94,5 +94,16 @@ trait AuthUserTrait
         ]);
 
         return $this;
+    }
+
+    /**
+     * @return mixed
+     * @author Cookie
+     */
+    public function logout()
+    {
+        auth_server()->logout();
+
+        return parent::logout();
     }
 }

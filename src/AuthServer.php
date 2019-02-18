@@ -40,6 +40,7 @@ class AuthServer
 
     protected
         $profileUrl = "area/user",
+        $logoutUrl = "area/logout",
         $refreshTokenUrl = "refresh-token";
 
     /**
@@ -170,6 +171,8 @@ class AuthServer
                 $this->accessTokenJWT();
             } catch (ExpiredException $exception) {
                 $this->refreshAccessToken();
+            } catch (\UnexpectedValueException $exception) {
+                return null;
             }
         }
 
@@ -239,6 +242,17 @@ class AuthServer
     }
 
     /**
+     * @return mixed
+     * @author Cookie
+     */
+    public function logout()
+    {
+        return $this->request($this->logoutUrl, [
+            "Authorization: Bearer " . $this->accessToken(),
+        ], null, "POST");
+    }
+
+    /**
      * @param        $ciphertext
      * @param        $password
      * @param string $salt
@@ -298,10 +312,10 @@ class AuthServer
             $numberOfDerivedWords += strlen($block) / 4;
         }
 
-        return array(
+        return [
             "key" => substr($derivedBytes, 0, $keySize * 4),
             "iv"  => substr($derivedBytes, $keySize * 4, $ivSize * 4)
-        );
+        ];
     }
 
     /**
@@ -347,6 +361,15 @@ class AuthServer
         $response = json_decode($response, true) ?? $response;
 
         return $response;
+    }
+
+    /**
+     * @return bool
+     * @author Cookie
+     */
+    public function check()
+    {
+        return (bool)$this->accessToken();
     }
 }
 
