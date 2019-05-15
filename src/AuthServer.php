@@ -18,6 +18,7 @@ class AuthServer
         SESSION_PREFIX = "auth",
         ACCESS_TOKEN = "accessToken",
         REFRESH_TOKEN = "refreshToken",
+        ENCRYPTED_TOKEN = "encryptedToken",
         UID = "uid";
 
     const UPDATE_COLUMNS = [
@@ -50,6 +51,8 @@ class AuthServer
      */
     public function conclusion($encryptedData)
     {
+        session([self::SESSION_PREFIX . ":" . self::ENCRYPTED_TOKEN => $encryptedData]);
+        
         $data = json_decode($this->decrypt($encryptedData, config("authServer.secret_key")));
 
         $this->setToken($data->accessToken, $data->refreshToken);
@@ -67,6 +70,15 @@ class AuthServer
         ]);
 
         return $decoded;
+    }
+
+    /**
+     * @return \Illuminate\Session\SessionManager|\Illuminate\Session\Store|mixed
+     * @author Cookie
+     */
+    public function encryptedToken()
+    {
+        return session(self::SESSION_PREFIX . ":" . self::ENCRYPTED_TOKEN);
     }
 
     /**
