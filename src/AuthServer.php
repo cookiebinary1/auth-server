@@ -52,7 +52,7 @@ class AuthServer
     public function conclusion($encryptedData)
     {
         session([self::SESSION_PREFIX . ":" . self::ENCRYPTED_TOKEN => $encryptedData]);
-        
+
         $data = json_decode($this->decrypt($encryptedData, config("authServer.secret_key")));
 
         $this->setToken($data->accessToken, $data->refreshToken);
@@ -355,6 +355,11 @@ class AuthServer
             CURLOPT_HTTPHEADER     => $headers,
             CURLOPT_CUSTOMREQUEST  => $method,
         ];
+
+        if (config("authServer.disable_ssl_verification")) {
+            $options['CURLOPT_SSL_VERIFYHOST'] = false;
+            $options['CURLOPT_SSL_VERIFYPEER'] = false;
+        }
 
         if ($dataJson) {
             $options[CURLOPT_POSTFIELDS] = $dataJson;
