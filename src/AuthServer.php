@@ -359,8 +359,8 @@ class AuthServer
         ];
 
         if (config("authServer.disable_ssl_verification")) {
-            $options['CURLOPT_SSL_VERIFYHOST'] = false;
-            $options['CURLOPT_SSL_VERIFYPEER'] = false;
+            $options[CURLOPT_SSL_VERIFYHOST] = false;
+            $options[CURLOPT_SSL_VERIFYPEER] = false;
         }
 
         if ($dataJson) {
