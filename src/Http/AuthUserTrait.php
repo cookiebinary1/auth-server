@@ -46,7 +46,7 @@ trait AuthUserTrait
      */
     public function updateProfile()
     {
-        return auth_server()->userUpdate($this);
+        return auth_server()->check() and auth_server()->userUpdate($this);
     }
 
     /**

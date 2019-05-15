@@ -183,6 +183,8 @@ class AuthServer
                 $this->accessTokenJWT();
             } catch (ExpiredException $exception) {
                 $this->refreshAccessToken();
+            } catch (\UnexpectedValueException $exception) {
+                return null;
             }
         }
 
@@ -376,6 +378,15 @@ class AuthServer
         $response = json_decode($response, true) ?? $response;
 
         return $response;
+    }
+
+    /**
+     * @return bool
+     * @author Cookie
+     */
+    public function check()
+    {
+        return (bool)$this->accessToken();
     }
 }
 
