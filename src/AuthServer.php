@@ -141,8 +141,8 @@ class AuthServer
         ]);
 
         $headers = [
-            'api_key:' . config("authServer.api_key"),
-            'api_secret:' . config("authServer.secret_key"),
+            // 'api_key:' . config("authServer.api_key"),
+            // 'api_secret:' . config("authServer.secret_key"),
             "Authorization: Bearer " . $this->accessToken(true),
             'Content-Type: application/json',
             'Content-Length: ' . strlen($dataJson),
@@ -150,8 +150,12 @@ class AuthServer
 
         $response = $this->request($this->refreshTokenUrl, $headers, $dataJson);
 
+        if (!@$response['accessToken'] && !@$response['refreshToken']) {
+            $this->logout();
+        }
+
         // @todo check response validity
-        $this->setToken(@$response['accessToken'], @$response['refresh_token']);
+        $this->setToken(@$response['accessToken'], @$response['refreshToken']);
 
         return $response;
     }
@@ -348,7 +352,7 @@ class AuthServer
 
         $curl = curl_init();
 
-        $headers[] = 'api_key:' . config("authServer.api_key");
+        $headers[] = 'api-key:' . config("authServer.api_key");
 
         $options = [
             CURLOPT_RETURNTRANSFER => true,
