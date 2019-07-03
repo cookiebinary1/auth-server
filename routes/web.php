@@ -9,3 +9,5 @@ Route::group(['middleware' => ['web']], function () {
     Route::get("register", "\Zeroone\Authserver\Http\Controllers\RegisterController@getRegister")->name("register");
 });
 
+Route::post('/registration/callback', 'Api\UsersController@createUser')->name('api.createUser');
+Route::put('/registration/callback', 'Api\UsersController@verifyUser')->name('api.verifyUser');
