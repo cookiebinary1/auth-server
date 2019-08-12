@@ -376,6 +376,11 @@ class AuthServer
 
         $response = curl_exec($curl);
 
+        $errors = curl_error($curl);
+        $errorInfo = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+
+        \Log::info("auth server request:", ['response' => $response, 'error' => $errors, 'errorInfo' => $errorInfo]);
+
         curl_close($curl);
 
         // @todo response validity check
