@@ -115,6 +115,7 @@ class AuthServer
 
     /**
      * @param User $user
+     * @return mixed
      * @author Martin Osusky
      */
     public function userUpdate(User $user)
@@ -131,7 +132,7 @@ class AuthServer
     }
 
     /**
-     * @param User $user
+     * @return mixed
      * @author Martin Osusky
      */
     public function refreshAccessToken()

@@ -106,4 +106,26 @@ trait AuthUserTrait
 
         return parent::logout();
     }
+
+    /**
+     * @return string
+     * @author Cookie
+     * @edited odziomkovak
+     */
+    public function invitationUrl()
+    {
+        if (isset($this->user_invitation_url) and $this->user_invitation_url)
+            return $this->user_invitation_url;
+
+        $data = auth_server()->request(
+            "area/invitation-code",
+            ["Authorization: Bearer " . $this->accessToken()]
+        );
+
+        $invitationUrl = is_array($data['invitationCode']) ? reset($data['invitationCode']) : 'gcu.io';
+
+        $this->update(['user_invitation_url' => $invitationUrl]);
+
+        return $invitationUrl;
+    }
 }
