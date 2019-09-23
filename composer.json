@@ -22,7 +22,7 @@
     },
     "require": {
         "php": "^7.1",
-        "laravel/framework": "^5.4",
+        "laravel/framework": ">=5.4",
         "doctrine/dbal": "^2.8",
         "firebase/php-jwt": "^5.0"
     }
